@@ -34,7 +34,7 @@ class Player {
     if (!player) {
       throw new Error('Player does not exist!');
     } else if (player.created_by !== userId) {
-      throw new Error('oops');
+      throw new Error('Permission denied!');
     }
     this.players = this.players.filter(player => player.id !== playerId && player.created_by !== userId);
   }
