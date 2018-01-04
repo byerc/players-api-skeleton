@@ -12,7 +12,12 @@ router.get('/players', async (req, res) => {
 
 router.post('/players', validatePlayer, async (req, res) => {
   const user = req.user;
-  const player = await Player.create({ ...req.body, created_by: user.userId });
+  let player;
+  try {
+    player = await Player.create({ ...req.body, created_by: user.userId });
+  } catch (e) {
+    return res.status(409).json({ success: false, error: e.message });
+  }
   res.status(200).json({ success: true, player });
 });
 
@@ -21,7 +26,7 @@ router.use('/players/:id', async (req, res) => {
   try {
     await Player.remove(playerId);
   } catch (e) {
-    return res.status(404).json({ error: e.message });
+    return res.status(404).json({ success: false, error: e.message });
   }
   res.status(200).json({ success: true });
 });
