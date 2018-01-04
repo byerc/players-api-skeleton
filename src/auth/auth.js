@@ -1,7 +1,7 @@
 const jwt = require('express-jwt');
 const { sign } = require('jsonwebtoken');
 
-const secret = process.env.JWT_SECRET;
+const secret = process.env.JWT_SECRET || 'secret';
 
 const options = {
   secret,

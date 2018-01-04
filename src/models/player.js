@@ -8,6 +8,7 @@ class Player {
   }
 
   async create({ first_name, last_name, rating, handedness, created_by }) {
+    // Check if user is trying to create an already existing player
     const existingPlayer = find(this.players, (p) => { return p.first_name === first_name && p.last_name === last_name; });
     if (existingPlayer) {
       throw new Error('Player already exists!');
@@ -30,7 +31,10 @@ class Player {
 
   async deleteById(ids) {
     const { playerId, userId } = ids;
+    // Get player
     const player = await this.findById(playerId);
+    // Check if player exists and if the player was created by the user
+    // making the request.
     if (!player) {
       throw new Error('Player does not exist!');
     } else if (player.created_by !== userId) {
