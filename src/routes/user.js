@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const { signToken } = require('../auth/auth');
 const User = require('../models/user');
 const { validateUser, validateLogin } = require('../middlewares/validate');
 const router = new Router();
@@ -16,7 +16,7 @@ router.post('/user', validateUser, async (req, res) => {
   } catch (e) {
     return res.status(409).json({ success: false, error: e.message });
   }
-  const token = jwt.sign({ userId: user.id, permissions: 'admin' }, secret);
+  const token = signToken(user.id);
   res.status(201).json({ success: true, user, token });
 });
 
@@ -32,7 +32,7 @@ router.post('/login', validateLogin, async (req, res) => {
   if (!isValidPassword) {
     return res.status(401).json({ success: false });
   }
-  const token = jwt.sign({ userId: user.id, permissions: 'admin' }, secret);
+  const token = signToken(user.id);
   delete user.password;
   res.status(200).json({ success: true, user, token });
 });

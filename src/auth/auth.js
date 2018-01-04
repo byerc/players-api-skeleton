@@ -8,7 +8,7 @@ const options = {
 };
 
 function signToken(userId) {
-  return sign({ userId, permissions: 'admin' });
+  return sign({ userId, permissions: 'admin' }, secret);
 }
 
 module.exports = { jwt: jwt(options).unless({ path: ['/api/user', '/api/login'] }), signToken };

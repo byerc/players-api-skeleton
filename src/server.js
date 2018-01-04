@@ -1,13 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const routes = require('./routes/index');
-const auth = require('./middlewares/auth');
+const { jwt } = require('./auth/auth');
 
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(auth);
+app.use(jwt);
 app.use('/', routes);
 // Handle errors
 app.use((err, req, res, next) => {
