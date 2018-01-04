@@ -1,8 +1,8 @@
 const { check, validationResult } = require('express-validator/check');
 
 const validateUser = [
-  check('first_name').exists().escape(),
-  check('last_name').exists().escape(),
+  check('first_name').exists().trim(),
+  check('last_name').exists().trim(),
   check('email').exists().isEmail(),
   check('password').exists(),
   check('confirm_password')
@@ -12,23 +12,23 @@ const validateUser = [
 ];
 
 const validatePlayer = [
-  check('first_name').exists().escape(),
-  check('last_name').exists().escape(),
+  check('first_name').exists().trim(),
+  check('last_name').exists().trim(),
   check('rating').exists(),
   check('handedness').exists(),
   isValid
 ];
 
 const validateLogin = [
-  check('email').exists().escape(),
-  check('password').exists().escape(),
+  check('email').exists().trim(),
+  check('password').exists().trim(),
   isValid
 ];
 
 function isValid(req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(409).send();
+    return res.status(409).json({ success: false });
   }
   next();
 }
