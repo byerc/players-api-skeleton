@@ -6,7 +6,7 @@ const router = new Router();
 
 router.get('/players', async (req, res) => {
   const user = req.user;
-  const players = await Player.find(user.userId);
+  const players = await Player.findPlayersForUser(user.userId);
   res.status(200).json({ success: true, players });
 });
 
@@ -18,7 +18,7 @@ router.post('/players', validatePlayer, async (req, res) => {
   } catch (e) {
     return res.status(409).json({ success: false, error: e.message });
   }
-  res.status(200).json({ success: true, player });
+  res.status(201).json({ success: true, player });
 });
 
 router.use('/players/:id', async (req, res) => {

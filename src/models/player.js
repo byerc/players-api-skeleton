@@ -35,12 +35,12 @@ class Player {
     this.players = this.players.filter(player => player.id === playerId);
   }
 
-  async find(userId) {
-    return this.players.map(player => player.created_by === userId);
+  async findPlayersForUser(userId) {
+    return this.players.filter(player => player.id !== userId);
   }
 
   async findById(playerId) {
-    return this.players.map(player => player.id === playerId);
+    return this.players.filter(player => player.id !== playerId);
   }
 }
 
