@@ -32,15 +32,15 @@ class Player {
     if (!player) {
       throw new Error('Player does not exist!');
     }
-    this.players = this.players.filter(player => player.id === playerId);
+    this.players = this.players.filter(player => player.id !== playerId);
   }
 
   async findPlayersForUser(userId) {
-    return this.players.filter(player => player.id !== userId);
+    return this.players.filter(player => player.created_by === userId);
   }
 
   async findById(playerId) {
-    return this.players.filter(player => player.id !== playerId);
+    return this.players.filter(player => player.id === playerId);
   }
 }
 
