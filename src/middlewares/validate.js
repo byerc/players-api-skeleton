@@ -19,6 +19,12 @@ const validatePlayer = [
   isValid
 ];
 
+const validateLogin = [
+  check('email').exists().escape(),
+  check('password').exists().escape(),
+  isValid
+];
+
 function isValid(req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -27,4 +33,4 @@ function isValid(req, res, next) {
   next();
 }
 
-module.exports = { validateUser, validatePlayer };
+module.exports = { validateUser, validatePlayer, validateLogin };

@@ -1,6 +1,7 @@
 // Hacky way to mimic a primary key
 const uuid = require('uuid/v4');
 const find = require('lodash.find');
+
 class Player {
   constructor () {
     this.players = [];

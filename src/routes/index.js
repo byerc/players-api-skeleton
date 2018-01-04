@@ -7,6 +7,4 @@ const router = new Router();
 router.use('/api', playerRouter);
 router.use('/api', userRouter);
 
-router.post('/api/login', (req, res) => {});
-
 module.exports = router;

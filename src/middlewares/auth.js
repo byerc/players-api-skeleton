@@ -6,4 +6,4 @@ const options = {
   secret,
 };
 
-module.exports = jwt(options).unless({ path: ['/api/user'] });
+module.exports = jwt(options).unless({ path: ['/api/user', '/api/login'] });
