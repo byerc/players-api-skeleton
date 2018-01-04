@@ -29,6 +29,7 @@
     "express-jwt-permissions": "^1.0.0",
     "express-validator": "^4.3.0",
     "jsonwebtoken": "^8.1.0",
+    "lodash.find": "^4.6.0",
     "uuid": "^3.1.0"
   }
 }
