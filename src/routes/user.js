@@ -5,8 +5,6 @@ const User = require('../models/user');
 const { validateUser, validateLogin } = require('../middlewares/validate');
 const router = new Router();
 
-const secret = process.env.JWT_SECRET || 'secret';
-
 router.post('/user', validateUser, async (req, res) => {
   const password = req.body.password;
   req.body.password = await bcrypt.hash(password, 10);
