@@ -22,9 +22,10 @@ router.post('/players', validatePlayer, async (req, res) => {
 });
 
 router.use('/players/:id', async (req, res) => {
+  const user = req.user;
   const playerId = req.params.id;
   try {
-    await Player.remove(playerId);
+    await Player.deleteById({ playerId, userId: user.userId });
   } catch (e) {
     return res.status(404).json({ success: false, error: e.message });
   }

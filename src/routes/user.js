@@ -12,7 +12,7 @@ router.post('/user', validateUser, async (req, res) => {
   const user = await User.create(req.body);
   const secret = process.env.JWT_SECRET || 'secret';
   const token = jwt.sign({ userId: user.id, permissions: 'admin' }, secret);
-  res.json({ token, user });
+  res.status(200).json({ success: true, user, token });
 });
 
 module.exports = router;

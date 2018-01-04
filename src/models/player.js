@@ -7,7 +7,7 @@ class Player {
   }
 
   async create({ first_name, last_name, rating, handedness, created_by }) {
-    const existingPlayer = find(this.players, (p) => { return p.first_name === first_name && p.last_name === last_name });
+    const existingPlayer = find(this.players, (p) => { return p.first_name === first_name && p.last_name === last_name; });
     if (existingPlayer) {
       throw new Error('Player already exists!');
     }
@@ -23,16 +23,19 @@ class Player {
     return player;
   }
 
-  async remove(playerId) {
-    if (typeof playerId === 'object') {
-      this.players = [];
-      return;
-    }
-    const player = find(this.players, (p) => { return p.id === playerId });
+  async remove() {
+    this.players = [];
+  }
+
+  async deleteById(ids) {
+    const { playerId, userId } = ids;
+    const player = await this.findById(playerId);
     if (!player) {
       throw new Error('Player does not exist!');
+    } else if (player.created_by !== userId) {
+      throw new Error('oops');
     }
-    this.players = this.players.filter(player => player.id !== playerId);
+    this.players = this.players.filter(player => player.id !== playerId && player.created_by !== userId);
   }
 
   async findPlayersForUser(userId) {
@@ -40,7 +43,7 @@ class Player {
   }
 
   async findById(playerId) {
-    return this.players.filter(player => player.id === playerId);
+    return find(this.players, (p) => { return p.id === playerId; });
   }
 }
 
