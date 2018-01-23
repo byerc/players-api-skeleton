@@ -61,7 +61,7 @@ describe('User API', () => {
           expect(res.status).to.equal(201);
           expect(res.body.success).to.be.true;
           expect(res.body.user).to.be.a('object');
-          expect(res.body.user.id).to.be.a('string');
+          expect(res.body.user.id).to.be.a('number');
           expect(res.body.token).to.be.a('string');
           done();
         });
@@ -107,7 +107,7 @@ describe('User API', () => {
           expect(res.status).to.equal(200);
           expect(res.body.success).to.be.true;
           expect(res.body.user).to.be.a('object');
-          expect(res.body.user.id).to.be.a('string');
+          expect(res.body.user.id).to.be.a('number');
           expect(res.body.token).to.be.a('string');
           done();
         });

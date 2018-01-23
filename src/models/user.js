@@ -1,33 +1,26 @@
-const uuid = require('uuid/v4');
-const find = require('lodash.find');
+const { query } = require('../db');
+const table = 'ping_pong_players.users';
 
-class User {
-  constructor() {
-    this.users = [];
-  }
+const User = {
 
-  async create({ first_name, last_name, email, password}) {
-    const existingUser = await this.findUserByEmail(email);
-    if (existingUser) {
+  create: async ({ first_name, last_name, email, password}) => {
+    const existingUser = await query(`SELECT * FROM ${ table } WHERE email = $1`, [email]);
+    if (existingUser.length > 0) {
       throw new Error('User exists!');
     }
-    const user = {
-      id: uuid(),
-      first_name,
-      last_name,
-      email,
-    };
-    this.users.push({ ...user, password });
+    const user = await query(`INSERT INTO ${ table } (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING id, first_name, last_name, email`, [first_name, last_name, email, password]);
     return user;
+  },
+
+  remove: async () => {
+    await query(`DELETE FROM ${ table }`);
+  },
+
+  findUserByEmail: async (email) => {
+    const users = await query(`SELECT * FROM ${ table } WHERE email = $1`, [email]);
+    return users[0];
   }
 
-  async findUserByEmail(email) {
-    return find(this.users, (u) => { return u.email === email; });
-  }
+};
 
-  async remove() {
-    this.users = [];
-  }
-}
-
-module.exports = new User();
+module.exports = User;

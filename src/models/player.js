@@ -1,55 +1,41 @@
-// Hacky way to mimic a primary key
-const uuid = require('uuid/v4');
-const find = require('lodash.find');
+const { query }= require('../db');
+const table = 'ping_pong_players.players';
 
-class Player {
-  constructor () {
-    this.players = [];
-  }
-
-  async create({ first_name, last_name, rating, handedness, created_by }) {
+const Player = {
+  create: async ({ first_name, last_name, rating, handedness, created_by }) => {
     // Check if user is trying to create an already existing player
-    const existingPlayer = find(this.players, (p) => { return p.first_name === first_name && p.last_name === last_name; });
-    if (existingPlayer) {
+    const existingPlayers = await query(`SELECT * FROM ${ table } WHERE first_name = $1 AND last_name = $2`, [first_name, last_name]);
+    if (existingPlayers.length > 0) {
       throw new Error('Player already exists!');
     }
-    let player = {
-      id: uuid(),
-      first_name,
-      last_name,
-      rating,
-      handedness,
-      created_by,
-    };
-    this.players.push(player);
+    const player = query(`INSERT INTO ${ table } (first_name, last_name, rating, handedness, created_by) VALUES ($1, $2, $3, $4, $5) RETURNING id, first_name, last_name, handedness, rating, created_by`, [first_name, last_name, rating, handedness, created_by]);
     return player;
-  }
+  },
 
-  async remove() {
-    this.players = [];
-  }
+  remove: async () => {
+    await query(`DELETE FROM ${ table }`);
+  },
 
-  async deleteById(ids) {
+  deleteById: async (ids) => {
     const { playerId, userId } = ids;
-    // Get player
-    const player = await this.findById(playerId);
-    // Check if player exists and if the player was created by the user
-    // making the request.
-    if (!player) {
-      throw new Error('Player does not exist!');
-    } else if (player.created_by !== userId) {
-      throw new Error('Permission denied!');
+    // Get player by id and if the player was created by the requesting user
+    const players = await query(`SELECT * FROM ${ table } WHERE id = $1 AND created_by = $2`, [playerId, userId]);
+    // Check that the player exists
+    if (players.length === 0) {
+      throw new Error('Unable to delete specified player!');
     }
-    this.players = this.players.filter(player => player.id !== playerId && player.created_by !== userId);
-  }
+    // Delete the player from table by ID
+    await query(`DELETE FROM ${ table } WHERE id = $1`, [playerId]);
+  },
 
-  async findPlayersForUser(userId) {
-    return this.players.filter(player => player.created_by === userId);
-  }
+  findById: async (playerId) => {
+    const players = await query(`SELECT * FROM ${ table } WHERE id = $1`, [playerId]);
+    return players[0];
+  },
 
-  async findById(playerId) {
-    return find(this.players, (p) => { return p.id === playerId; });
+  findPlayersForUser: async (userId) => {
+    return await query(`SELECT * FROM ${ table } WHERE created_by = $1`, [userId]);
   }
-}
+};
 
-module.exports = new Player();
+module.exports = Player;

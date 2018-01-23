@@ -19,7 +19,8 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     rating integer NOT NULL,
-    handedness VARCHAR(100) NOT NULL
+    handedness VARCHAR(100) NOT NULL, 
+    created_by integer REFERENCES ping_pong_players.users(id) ON DELETE CASCADE NOT NULL
   );
 EOSQL
 
