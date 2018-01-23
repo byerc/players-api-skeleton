@@ -21,6 +21,9 @@ TL;DR:
 
 ## Tests
 
+Before running tests, you will need `docker-compose`. Running `docker-compose up` will run a dockerized instance of postgres
+with the necessary schema.
+
 ```
 npm test
 ```
