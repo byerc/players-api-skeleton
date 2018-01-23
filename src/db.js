@@ -19,20 +19,14 @@ function getQueryFunction(query) {
   // split query by space and get first element for type
   const arr = query.split(' ');
   const type = arr[0];
-  let func;
 
-  switch (type) {
-    case 'SELECT':
-      func = db.any;
-    break;
-    case 'INSERT':
-      func = db.one;
-    break;
-    default:
-      func = db.query;
-  }
+  const functions = {
+    'SELECT': db.any,
+    'INSERT': db.one,
+    'default': db.query,
+  };
 
-  return func;
+  return functions[type] || functions['default'];
 }
 
 module.exports = { query };
